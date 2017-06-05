@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Osm.Server.Models;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,35 +25,28 @@ namespace Osm.Server.Controllers
         }
 
         // GET api/rooms/5
-        [HttpGet("{id}")]
-        public Room Get(int id)
+        [HttpGet("{name}")]
+        public Room Get(string name)
         {
-            return _context.Rooms.Find(id);
+            return _context.Rooms.SingleOrDefault(r => r.RoomName.Equals(name));
         }
 
-        // POST api/values
-        [HttpPost]
-        public int Post([FromBody]Room room)
+        // POST api/rooms
+        [HttpPost("{id}")]
+        public JsonResult Post(int id, [FromBody]Room room)
         {
-            if (room != null)
+            if (id > 0 && room != null)
             {
+                room.OwnerId = id;
+                room.RoomName = RandomStringGenerator.Generate();
                 _context.Rooms.Add(room);
                 _context.SaveChanges();
-            }
-
-            return room.Id;
-        }
-
-        // POST api/rooms/joinroom/1/2
-        [HttpPost("{roomId}/{memberId}")]
-        public void JoinRoom(int roomId, int memberId)
-        {
-            if (roomId > 0 && memberId > 0)
-            {
-                var member = _context.Members.Find(memberId);
-                member.RoomId = roomId;
+                var member = _context.Members.Find(id);
+                member.RoomId = room.Id;
                 _context.SaveChanges();
             }
+
+            return Json(room);
         }
 
         // PUT api/values/5

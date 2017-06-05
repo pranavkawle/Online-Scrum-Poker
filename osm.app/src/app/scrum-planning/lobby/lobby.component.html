@@ -1,0 +1,17 @@
+<div class="row cards">
+  <ng-template ngFor let-member [ngForOf]="members" let-i="index">
+    <div class="col">
+      <div class="card shine" [style.background]="memberColors[member.id]">
+        <div class="card-header" [style.color]="memberColors[member.id]">
+          <h4>{{member.name}}</h4>
+        </div>
+        <div class="card-block">
+          <div class="content">
+            <span [innerHtml]="getCardValue(member.cardId)"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+<osm-vote [roomName]="roomName" [memberId]="memberId" [memberName]="memberName"></osm-vote>

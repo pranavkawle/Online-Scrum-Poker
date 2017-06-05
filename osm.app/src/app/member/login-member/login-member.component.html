@@ -1,10 +1,13 @@
-<div>
-  <h2>Your Detail</h2>
-  <form [formGroup]="memberForm" novalidate>
-    <div class="form-group">
-      <label for="memberName">Name</label>
-      <input class="form-control" id="memberName" placeholder="Name" formControlName="name">
-    </div>
-    <button type="button" class="btn btn-primary" (click)="login()">Join room</button>
-  </form>
+<div class="row">
+  <h1>Your Detail</h1>
 </div>
+<form [formGroup]="memberForm" (ngSubmit)="login()">
+  <div class="form-group">
+    <label for="memberName">Name</label>
+    <input class="form-control" id="memberName" placeholder="Name" formControlName="name" required>
+    <div *ngIf="formErrors.name" class="alert alert-danger">
+      {{ formErrors.name }}
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" [disabled]="!memberForm.valid">Join room</button>
+</form>

@@ -1,0 +1,22 @@
+<div class="row">
+  <h1>Create Room</h1>
+</div>
+<form [formGroup]="roomForm" (ngSubmit)="createRoom()">
+  <div class="form-group">
+    <label for="passphrase">Passphrase</label>
+    <input type="password" class="form-control" id="passphrase" placeholder="Passphrase" formControlName="passphrase">
+  </div>
+  <div class="form-group">
+    <label for="maxComplexity">Maximum Complexity</label>
+    <select class="form-control" id="maxComplexity" name="maxComplexity" formControlName="maxComplexity">
+        <option value="8">8</option>
+        <option value="13">13</option>
+        <option value="20">20</option>
+        <option value="40">40</option>
+        <option value="60">60</option>
+        <option value="100">100</option>
+      </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Create room</button>
+  <a [routerLink]="['/join-room', memberId]" class="btn btn-primary float-sm-right">Back</a>
+</form>

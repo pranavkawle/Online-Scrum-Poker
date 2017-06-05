@@ -1,6 +1,6 @@
 export class OsmMember {
     id: number;
     name: string;
-    roomId: number;
-    cardId: number;
+    roomId?: number;
+    cardId?: number;
 }

@@ -1,11 +1,15 @@
-<div>
-  <form>
-    <div class="form-group">
-      <label for="roomNumber">Room number</label>
-      <input type="search" class="form-control" id="roomNumber" placeholder="Room number" [(ngModel)]="roomNumber">
-    </div>
-    <button type="button" class="btn btn-primary" (click)="joinRoom()">Join room</button>
-  </form>
-
-  <button type="button" class="btn btn-primary">Create room</button>
+<div class="row">
+  <h1>Room Detail</h1>
 </div>
+<form [formGroup]="roomForm" (ngSubmit)="joinRoom()">
+  <div class="form-group">
+    <label for="roomName">Room name</label>
+    <input type="text" class="form-control" id="roomName" formControlName="roomName" placeholder="Room name">
+  </div>
+  <div class="form-group">
+    <label for="passphrase">Passphrase</label>
+    <input type="password" class="form-control" id="passphrase" formControlName="passphrase" placeholder="Passphrase">
+  </div>
+  <button type="submit" class="btn btn-primary">Join room</button>
+  <a [routerLink]="['/create-room', memberId]" class="btn btn-primary float-sm-right">Create Room</a>
+</form>

@@ -1,17 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { RoomService } from '../room.service';
 import { Room } from '../room';
-import { OsmMember } from '../../member/osm-member';
 
 @Component({
-  selector: 'osm-join-room',
-  templateUrl: './join-room.component.html',
-  styleUrls: ['./join-room.component.scss']
+  selector: 'osm-create-room',
+  templateUrl: './create-room.component.html',
+  styleUrls: ['./create-room.component.scss']
 })
-export class JoinRoomComponent implements OnInit {
+export class CreateRoomComponent implements OnInit {
   roomForm: FormGroup;
   room: Room;
   memberId: number;
@@ -21,7 +20,7 @@ export class JoinRoomComponent implements OnInit {
     this.room.id = 0;
     this.room.roomName = '';
     this.room.passphrase = '';
-    this.room.isOpen = true;
+    this.room.maximumComplexity = 13 // Set default value for max complexity
   }
 
   ngOnInit() {
@@ -31,10 +30,10 @@ export class JoinRoomComponent implements OnInit {
     });
   }
 
-  joinRoom() {
+  createRoom() {
     this.prepareRoom();
-    this.service.joinRoom(this.memberId, this.room).subscribe((result: any) => {
-      this.room.id = result;
+    this.service.createRoom(this.memberId, this.room).subscribe((result: Room) => {
+      this.room = result;
       this.router.navigate(['/lobby', this.room.roomName, this.memberId]);
     });
   }
@@ -42,12 +41,12 @@ export class JoinRoomComponent implements OnInit {
   private buildForm(): void {
     this.roomForm = this.formBuilder.group({
       'passphrase': [this.room.passphrase],
-      'roomName': [this.room.roomName]
+      'maxComplexity': [this.room.maximumComplexity]
     });
   }
 
   private prepareRoom(): void {
-    this.room.roomName = this.roomForm.controls.roomName.value;
     this.room.passphrase = this.roomForm.controls.passphrase.value;
+    this.room.maximumComplexity = this.roomForm.controls.maxComplexity.value;
   }
 }

@@ -24,22 +24,28 @@ namespace Osm.Server.Controllers
         }
 
         // GET api/cards/5
-        [HttpGet("{maxComplexity}")]
-        public IEnumerable<Card> Get(short maxComplexity)
+        [HttpGet("{roomName}")]
+        public IEnumerable<Card> Get(string roomName)
         {
-            return _context.Cards.Where(c => Convert.ToInt16(c.Complexity) <= maxComplexity);
+            var room = _context.Rooms.SingleOrDefault(r => r.RoomName == roomName);
+            if(room != null)
+            {
+                return _context.Cards.Where(c => c.Complexity <= room.MaximumComplexity);
+            }
+
+            return null;
         }
 
         // POST api/cards
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post([FromBody]Card card)
         {
             new NotImplementedException();
         }
 
         // PUT api/cards/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody]Card card)
         {
             new NotImplementedException();
         }

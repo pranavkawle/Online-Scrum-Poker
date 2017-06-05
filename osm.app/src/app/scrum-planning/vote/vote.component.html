@@ -1,0 +1,37 @@
+<div class="row cards align-items-center">
+  <div class="col-12">
+    <div class="card shine bg-primary">
+      <div class="card-block">
+        <div class="content">
+          <a class="btn vote" (click)="open(votimgModal)" [innerHtml]="cardValue" href="javascript:void(0);">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<ng-template #votimgModal let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Vote now</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row align-items-center">
+      <ng-template ngFor let-card [ngForOf]="cards" let-i="index">
+        <div class="col">
+          <div class="card shine bg-primary">
+            <div class="card-block">
+              <div class="content">
+                <a class="btn" (click)="vote(card.id)" [innerHtml]="getSafeHtml(card.value)" href="javascript:void(0);">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</ng-template>

@@ -1,18 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
-import { JoinRoomComponent } from './join-room/join-room.component';
-import { JoinRoomService } from './join-room/join-room.service';
 import { RoomRoutingModule } from './room-routing.module';
+import { CreateRoomComponent } from './create-room/create-room.component';
+import { JoinRoomComponent } from './join-room/join-room.component';
+import { RoomService } from './room.service';
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
+    ReactiveFormsModule,
     RoomRoutingModule
   ],
-  declarations: [JoinRoomComponent],
-  providers: [JoinRoomService]
+  declarations: [JoinRoomComponent, CreateRoomComponent],
+  providers: [RoomService]
 })
 export class RoomModule { }

@@ -2,11 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 
+import { CreateRoomComponent } from './create-room/create-room.component';
 import { JoinRoomComponent } from './join-room/join-room.component';
-import { OsmMember } from '../member/osm-member';
 
 const routes: Routes = [
-  { path: 'join-room', component: JoinRoomComponent, data: { member: OsmMember } },
+  { path: 'create-room/:memberId', component: CreateRoomComponent },
+  { path: 'join-room/:memberId', component: JoinRoomComponent }
 ];
 
 @NgModule({

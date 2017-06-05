@@ -4,7 +4,7 @@ import { ReactiveFormsModule  } from '@angular/forms';
 
 import { LoginMemberComponent } from './login-member/login-member.component';
 import { MemberRoutingModule } from './member-routing.module';
-import { LoginMemberService } from './login-member/login-member.service';
+import { MemberService } from './member.service';
 
 @NgModule({
   imports: [
@@ -14,6 +14,6 @@ import { LoginMemberService } from './login-member/login-member.service';
   ],
   declarations: [LoginMemberComponent],
   exports: [LoginMemberComponent],
-  providers: [LoginMemberService]
+  providers: [MemberService]
 })
 export class MemberModule { }

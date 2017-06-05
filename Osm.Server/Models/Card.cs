@@ -8,6 +8,7 @@ namespace Osm.Server.Models
     public class Card
     {
         public int Id { get; set; }
-        public string Complexity { get; set; }
+        public string Value { get; set; }
+        public decimal Complexity { get; set; }
     }
 }

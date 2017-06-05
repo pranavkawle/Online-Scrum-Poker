@@ -1,7 +1,8 @@
 export class Room {
-    Id: string;
-    RoomName: string;
-    Passphrase: string;
-    IsOpen: boolean;
-    MaximumComplexity: number;
+    id: number;
+    roomName: string;
+    passphrase: string;
+    isOpen: boolean;
+    maximumComplexity: number;
+    ownerId: number;
 }
