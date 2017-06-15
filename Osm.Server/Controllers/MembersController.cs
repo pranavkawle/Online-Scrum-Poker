@@ -56,7 +56,7 @@ namespace Osm.Server.Controllers
                     member.RoomId = model.RoomId;
                     member.CardId = model.CardId;
                     _context.SaveChanges();
-                }                
+                }
             }
 
             return true;

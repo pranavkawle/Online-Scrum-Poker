@@ -11,6 +11,7 @@ import { Room } from "../../room/room";
 import { OsmMember } from "../../member/osm-member";
 import { ScrumPlanningService } from '../scrum-planning.service';
 import { Card } from "app/scrum-planning/card";
+import { Refresh } from "app/scrum-planning/refresh";
 
 @Component({
   selector: 'osm-lobby',
@@ -26,6 +27,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   cards: Array<Card>;
   private alive: boolean; // used to unsubscribe from the IntervalObservable when OnDestroy is called.
   private cardsLoaded: boolean;
+  currentCardId: number;
 
   room: Room;
   memberColors: { [key: number]: string }[];
@@ -42,38 +44,22 @@ export class LobbyComponent implements OnInit, OnDestroy {
       this.memberId = params['memberId'];
 
       // get our data immediately when the component inits
-      this.service.getMembers(this.roomName)
-        .first() // only gets fired once
-        .subscribe((result: Array<OsmMember>) => {
-          this.members = result;
-          this.members.forEach(member => {
-            if (member && member.id > 0) {
-              this.memberColors[member.id] = this.getRandomColor();
-              if (member.id === this.memberId) this.memberName = member.name;
-            }
-          });
-        });
+      this.getMembersOnce();
 
       // get our data every subsequent 10 seconds
       IntervalObservable.create(5000)
         .takeWhile(() => this.alive) // only fires when component is alive
         .distinctUntilChanged()
         .subscribe(() => {
-          this.service.getMembers(this.roomName)
-            .subscribe((result: Array<OsmMember>) => {
-              let newMembers: OsmMember[] = [];
-              // result.forEach(newMember => {
-              //   let found = false;
-              //   this.members.forEach(member => {
-              //     if (newMember.id == member.id) {
-              //       found = true;
-              //       member.cardId = newMember.cardId;
-              //     }
-              //   });
-              //   if (!found) newMembers.push(newMember);
-              // });
+          this.service.refresh(this.roomName)
+            .subscribe((result: Refresh) => {
+              if (!result) this.router.navigate(['/login']);
 
-              result.forEach(newMember => {
+              let members = result.members;
+              this.room.isRevealed = result.isRevealed;
+
+              let newMembers: OsmMember[] = [];
+              members.forEach(newMember => {
                 let member = this.members.find(m => m.id === newMember.id);
                 if (member) member.cardId = newMember.cardId;
                 else newMembers.push(newMember);
@@ -107,16 +93,48 @@ export class LobbyComponent implements OnInit, OnDestroy {
   }
 
   getCardValue(cardId: number) {
-    if (this.cards)
+    if (this.cards && cardId > 0) {
       return this.sanitizer.bypassSecurityTrustHtml(this.cards.find(c => c.id === cardId).value);
+    }
     else
       return '';
+  }
+
+  getMembersOnce() {
+    this.service.refresh(this.roomName)
+      .first() // only gets fired once
+      .subscribe((result: Refresh) => {
+        if (!result) this.router.navigate(['/login']);
+
+        this.members = result.members;
+        this.members.forEach(member => {
+          if (member && member.id > 0) {
+            this.memberColors[member.id] = this.getRandomColor();
+            if (member.id === this.memberId) {
+              this.memberName = member.name;
+              this.currentCardId = member.cardId;
+            }
+          }
+        });
+      });
+  }
+
+  resetVotes() {
+    this.room.isRevealed = false;
+    this.service.updateRoom(this.room).subscribe((result: boolean) => {
+      console.log('reset');
+    });
+  }
+
+  revealVotes() {
+    this.room.isRevealed = true;
+    this.service.updateRoom(this.room);
   }
 
   private waitForCards() {
     setTimeout(() => {
       if (!this.cardsLoaded) this.waitForCards();
-    }, 2000);
+    }, 1000);
   }
 
   private getRandomColor(): string {

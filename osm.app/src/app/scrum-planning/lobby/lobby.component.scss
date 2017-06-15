@@ -2,7 +2,10 @@ $card-width: 10vh;
 $card-height: 15vh;
 
 .cards {
-    height: 70vh;
+    height: 69vh;
+    @media (orientation: landscape) {
+        height: 60vh;
+    }
 }
 
 .card {
@@ -21,26 +24,38 @@ $card-height: 15vh;
         }
     }
 
-    @media screen and (max-width: 480px) {
-        .card-block {
+    .card-block {
+        @media screen and (max-width: 480px) {
             padding: 0;
         }
-
-        .content {
-            font-size: 2rem !important;
-        }
     }
-    @media screen and (min-width: 480px) {
-        .content {
-            font-size: 4rem;
-            margin-top: -2rem;
-        }
-    }    
+
+    @media (orientation: landscape) and (max-width: 720px) {
+        width: calc(#{$card-height} * 2);
+        height: calc(#{$card-width} * 2);
+    }
     
     .content {
+        display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+        display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+        display: -ms-flexbox;      /* TWEENER - IE 10 */
+        display: -webkit-flex;     /* NEW - Chrome */
         display: flex;
         align-items: center;
         justify-content: center;
+
+        @media screen and (max-width: 480px) {
+            font-size: 2rem !important;
+        }
+
+        @media screen and (min-width: 480px) {
+            font-size: 4rem;
+            margin-top: -2rem;
+        }
+        
+        @media (orientation: landscape) and (max-width: 720px) {
+            font-size: 2rem;
+        }
     }
 }
 .shine:before {

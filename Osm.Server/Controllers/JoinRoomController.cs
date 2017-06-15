@@ -24,15 +24,9 @@ namespace Osm.Server.Controllers
         }
 
         // GET api/joinroom/5
-        [HttpGet("{name}")]
-        public IEnumerable<Member> Get(string name)
+        [HttpGet("{id}")]
+        public string Get(int id)
         {
-            var room = _context.Rooms.SingleOrDefault(r => r.RoomName.Equals(name));
-            if (room != null)
-            {
-                return _context.Members.Where(m => m.RoomId == room.Id); 
-            }
-
             return null;
         }
 
@@ -65,14 +59,14 @@ namespace Osm.Server.Controllers
             {
                 var member = _context.Members.Find(id);
 
-                var room = _context.Rooms.SingleOrDefault(r => r.RoomName.Equals(model.RoomName) && 
+                var room = _context.Rooms.SingleOrDefault(r => r.RoomName.Equals(model.RoomName) &&
                 (string.IsNullOrWhiteSpace(model.Passphrase) ? true : r.Passphrase == model.Passphrase));
                 if (room != null)
                 {
                     model.Id = member.RoomId = room.Id;
                     room.Passphrase = model.Passphrase;
                     room.RoomName = model.RoomName;
-                    _context.SaveChanges(); 
+                    _context.SaveChanges();
                 }
             }
 

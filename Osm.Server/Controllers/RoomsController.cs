@@ -51,9 +51,22 @@ namespace Osm.Server.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]Room room)
+        public void Put(int id, [FromBody]Room model)
         {
-            throw new NotImplementedException();
+            if(id > 0 && model != null)
+            {
+                var room = _context.Rooms.Find(id);
+                if(!model.IsRevealed)
+                {
+                    foreach (var member in _context.Members.Where(m => m.RoomId == id))
+                    {
+                        member.CardId = null;
+                    }
+                }
+
+                room.IsRevealed = model.IsRevealed;
+                _context.SaveChanges();
+            }
         }
 
         // DELETE api/values/5

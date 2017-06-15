@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Osm.Server.Controllers
 {
-    public class BaseController: Controller
+    public class BaseController : Controller
     {
         protected readonly OsmContext _context;
 

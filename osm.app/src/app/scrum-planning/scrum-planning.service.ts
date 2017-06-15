@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -7,43 +7,46 @@ import 'rxjs/add/operator/map';
 import { OsmMember } from "app/member/osm-member";
 import { Room } from "app/room/room";
 import { Card } from "app/scrum-planning/card";
+import { Refresh } from "app/scrum-planning/refresh";
+import { environment } from "environments/environment";
+import { HttpClientService } from "app/http-client.service";
 
 @Injectable()
 export class ScrumPlanningService {
 
-  private memberUrl = 'http://localhost:64874/api/members';
-  private joinRoomUrl = 'http://localhost:64874/api/joinroom';
-  private roomUrl = 'http://localhost:64874/api/rooms';
-  private cardsUrl = 'http://localhost:64874/api/cards';
+  private memberUrl = `${environment.baseUrl}/api/members`;
+  private refreshUrl = `${environment.baseUrl}/api/refresh`;
+  private roomUrl = `${environment.baseUrl}/api/rooms`;
+  private cardsUrl = `${environment.baseUrl}/api/cards`;
 
-  private headers = new Headers({ 
-    'Access-Control-Allow-Origin': 'http://localhost:64874',
-    'Content-Type': 'application/json;'
-  });
-  private requestOptions = new RequestOptions({ headers: this.headers});
+  constructor(private http: HttpClientService) { }
 
-  constructor(private http: Http) { }
-
-  getMembers(roomName: string): Observable<OsmMember[]> {
-    return this.http.get(`${this.joinRoomUrl}/${roomName}`, this.requestOptions)
+  refresh(roomName: string): Observable<Refresh> {
+    return this.http.get(`${this.refreshUrl}/${roomName}`)
       .map(this.extractData)
       .catch(this.handleError);
   }
 
   getRoom(roomName: string): Observable<Room> {
-    return this.http.get(`${this.roomUrl}/${roomName}`, this.requestOptions)
+    return this.http.get(`${this.roomUrl}/${roomName}`)
       .map(this.extractData)
       .catch(this.handleError);
   }
 
   getCards(roomName: string): Observable<Card[]> {
-    return this.http.get(`${this.cardsUrl}/${roomName}`, this.requestOptions)
+    return this.http.get(`${this.cardsUrl}/${roomName}`)
       .map(this.extractData)
       .catch(this.handleError);
   }
 
   vote(roomName: string, member: OsmMember): Observable<boolean> {
-    return this.http.put(`${this.memberUrl}/${roomName}`, JSON.stringify(member), this.requestOptions)
+    return this.http.put(`${this.memberUrl}/${roomName}`, JSON.stringify(member))
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  updateRoom(room: Room): Observable<boolean> {
+    return this.http.put(`${this.roomUrl}/${room.id}`, JSON.stringify(room))
       .map(this.extractData)
       .catch(this.handleError);
   }

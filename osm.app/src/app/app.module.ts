@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { RoomModule } from './room/room.module';
 import { MemberModule } from './member/member.module';
 import { ScrumPlanningModule } from './scrum-planning/scrum-planning.module';
+import { HttpClientService } from './http-client.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { ScrumPlanningModule } from './scrum-planning/scrum-planning.module';
   exports: [
     AppComponent
   ],
-  providers: [],
+  providers: [HttpClientService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

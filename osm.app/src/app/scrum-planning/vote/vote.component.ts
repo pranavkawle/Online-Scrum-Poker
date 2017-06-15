@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import 'rxjs/add/operator/do';
@@ -13,10 +13,12 @@ import { Room } from "app/room/room";
   templateUrl: './vote.component.html',
   styleUrls: ['./vote.component.scss']
 })
-export class VoteComponent implements OnInit {
+export class VoteComponent implements OnInit, OnChanges {
   @Input() memberId: number;
   @Input() memberName: string;
   @Input() roomName: string;
+  @Input() currentCardId: number;
+  @Output() refresh: EventEmitter<any> = new EventEmitter();
 
   room: Room;
   cardValue: string;
@@ -42,6 +44,11 @@ export class VoteComponent implements OnInit {
     });
   }
 
+  ngOnChanges() {
+    if(this.cards != null && this.currentCardId > 0)
+      this.cardValue = this.cards.find(c => c.id === this.currentCardId).value;
+  }
+
   open(content) {
     this.modalResult = this.modalService.open(content);
     this.modalResult.result.then((result) => { }, (reason) => { })
@@ -58,8 +65,10 @@ export class VoteComponent implements OnInit {
       roomId: this.room.id,
       cardId: cardId
     }
+    this.cardValue = this.cards.find(c => c.id === cardId).value;
     this.service.vote(this.room.roomName, member).subscribe((result: boolean) => {
       this.modalResult.close();
     });
+    this.refresh.emit(null);
   }
 }

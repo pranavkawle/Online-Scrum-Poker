@@ -20,6 +20,7 @@ namespace Osm.Server.Models
         }
         public int MaximumComplexity { get; set; }
         public int OwnerId { get; set; }
+        public bool IsRevealed { get; set; }
 
         public ICollection<Member> Members { get; set; }
     }

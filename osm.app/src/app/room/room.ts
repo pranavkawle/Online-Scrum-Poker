@@ -5,4 +5,5 @@ export class Room {
     isOpen: boolean;
     maximumComplexity: number;
     ownerId: number;
+    isRevealed: boolean;
 }

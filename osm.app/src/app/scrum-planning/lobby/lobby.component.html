@@ -13,5 +13,19 @@
       </div>
     </div>
   </ng-template>
+
+  <nav class="navbar navbar-inverse fixed-top bg-primary navbar-toggleable-md" [hidden]="room.ownerId != memberId">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggleForOwners"
+      aria-controls="navbarToggleForOwners" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="javascript:void(0);">Online Scrum Poker</a>
+    <div class="collapse navbar-collapse" id="navbarToggleForOwners">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0"></ul>
+      <button type="button" class="btn btn-secondary" (click)="resetVotes()">Reset Votes</button>
+      &nbsp;
+      <button type="button" class="btn btn-secondary" (click)="revealVotes()">Reveal Votes</button>
+    </div>
+  </nav>
 </div>
-<osm-vote [roomName]="roomName" [memberId]="memberId" [memberName]="memberName"></osm-vote>
+<osm-vote [roomName]="roomName" [memberId]="memberId" [memberName]="memberName" [currentCardId]="currentCardId" (refresh)="getMembersOnce()"></osm-vote>

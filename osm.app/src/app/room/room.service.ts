@@ -1,34 +1,31 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 import { Room } from './room';
+import { HttpClientService } from "app/http-client.service";
+import { environment } from "environments/environment";
 
 @Injectable()
 export class RoomService {
 
-  private roomUrl = 'http://localhost:64874/api/rooms';
-  private joinRoomUrl = 'http://localhost:64874/api/joinroom';
-  private headers = new Headers({ 
-    'Access-Control-Allow-Origin': 'http://localhost:64874',
-    'Content-Type': 'application/json;'
-  });
-  private requestOptions = new RequestOptions({ headers: this.headers});
+  private roomUrl = `${environment.baseUrl}/api/rooms`;
+  private joinRoomUrl = `${environment.baseUrl}/api/joinroom`;
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClientService) { }
 
   createRoom(memberId: number, room: Room): Observable<any> {
     return this.http
-      .post(`${this.roomUrl}/${memberId}`, JSON.stringify(room), this.requestOptions)
+      .post(`${this.roomUrl}/${memberId}`, JSON.stringify(room))
       .map(this.extractData)
       .catch(this.handleError);
   }
 
   joinRoom(memberId: number, room: Room): Observable<any> {
     return this.http
-      .post(`${this.joinRoomUrl}/${memberId}`, JSON.stringify(room), this.requestOptions)
+      .post(`${this.joinRoomUrl}/${memberId}`, JSON.stringify(room))
       .map(this.extractData)
       .catch(this.handleError);
   }

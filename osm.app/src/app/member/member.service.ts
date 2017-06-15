@@ -1,26 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 import { OsmMember } from './osm-member';
+import { environment } from "environments/environment";
+import { HttpClientService } from "app/http-client.service";
 
 @Injectable()
 export class MemberService {
 
-  private memberUrl = 'http://localhost:64874/api/members';  // URL to web API
-  private headers = new Headers({ 
-    'Access-Control-Allow-Origin': 'http://localhost:64874',
-    'Content-Type': 'application/json;'
-  });
-  private requestOptions = new RequestOptions({ headers: this.headers});
+  private memberUrl = `${environment.baseUrl}/api/members`;  // URL to web API
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClientService) { }
 
   addMember(member: OsmMember): Observable<any> {
-    let headers = this.headers;
-    return this.http.post(this.memberUrl, JSON.stringify(member), this.requestOptions)
+    return this.http.post(this.memberUrl, JSON.stringify(member))
       .map(this.extractData)
       .catch(this.handleError);
   }
