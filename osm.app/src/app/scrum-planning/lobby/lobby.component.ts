@@ -27,6 +27,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   cards: Array<Card>;
   private alive: boolean; // used to unsubscribe from the IntervalObservable when OnDestroy is called.
   private cardsLoaded: boolean;
+  private enableRevealButton: boolean;
   currentCardId: number;
 
   room: Room;
@@ -40,12 +41,13 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.room = new Room();
     this.room.ownerId = 0;
     this.room.isRevealed = false;
+    this.enableRevealButton = false;
   }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.roomName = params['roomName'];
-      this.memberId = params['memberId'];
+      this.memberId = <number>params['memberId'];
 
       // get our data immediately when the component inits
       this.getMembersOnce();
@@ -57,6 +59,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.service.refresh(this.roomName)
             .subscribe((result: Refresh) => {
+              console.log(result);
               if (!result) this.router.navigate(['/login']);
 
               let members = result.members;
@@ -65,7 +68,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
               let newMembers: OsmMember[] = [];
               members.forEach(newMember => {
                 let member = this.members.find(m => m.id === newMember.id);
-                if (member) member.cardId = newMember.cardId;
+                if (member) {
+                  member.cardId = newMember.cardId;
+                  if (member.cardId > 0 && !this.room.isRevealed) this.enableRevealButton = true;
+                }
                 else newMembers.push(newMember);
               });
 
@@ -74,11 +80,14 @@ export class LobbyComponent implements OnInit, OnDestroy {
                 this.members.push(newMember);
                 this.memberColors[newMember.id] = this.getRandomColor();
               });
+
+              this.members = this.members.filter(m => members.find(m1 => m1.id === m.id));
             });
         });
 
       this.service.getRoom(this.roomName).subscribe((result: Room) => {
         this.room = result;
+        console.log(this.room);
       });
 
       // get our data immediately when the component inits
@@ -94,11 +103,12 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.alive = false; // switches your IntervalObservable off
+    this.logout();
   }
 
   getCardValue(cardId: number) {
     if (this.cards && cardId > 0) {
-      if(this.room && !this.room.isRevealed) return '';
+      if (this.room && !this.room.isRevealed) return '';
       return this.sanitizer.bypassSecurityTrustHtml(this.cards.find(c => c.id === cardId).value);
     }
     else
@@ -127,16 +137,31 @@ export class LobbyComponent implements OnInit, OnDestroy {
   resetVotes() {
     this.room.isRevealed = false;
     this.service.updateRoom(this.room).subscribe((result: boolean) => {
-      console.log('reset');
       this.currentCardId = 0;
+      this.enableRevealButton = false;
     });
   }
 
   revealVotes() {
     this.room.isRevealed = true;
     this.service.updateRoom(this.room).subscribe((result: boolean) => {
-      console.log('reveal');
+      this.enableRevealButton = false;
     });
+  }
+
+  logout() {
+    if (Number(this.memberId) === Number(this.room.ownerId)) {
+      console.log(true);
+      this.service.leaveRoom(this.room.id).subscribe((result: boolean) => {
+        this.router.navigate(['/login']);
+      });
+    }
+    else {
+      console.log(false);
+      this.service.logout(this.memberId).subscribe((result: boolean) => {
+        this.router.navigate(['/login']);
+      });
+    }
   }
 
   private waitForCards() {

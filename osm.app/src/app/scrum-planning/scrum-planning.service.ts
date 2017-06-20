@@ -51,6 +51,18 @@ export class ScrumPlanningService {
       .catch(this.handleError);
   }
 
+  leaveRoom(roomId: number): Observable<boolean> {
+    return this.http.delete(`${this.roomUrl}/${roomId}`)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
+  logout(memberId: number): Observable<boolean> {
+    return this.http.delete(`${this.memberUrl}/${memberId}`)
+      .map(this.extractData)
+      .catch(this.handleError);
+  }
+
   private extractData(res: Response) {
     let body = res.json();
     return body.data || body || {};

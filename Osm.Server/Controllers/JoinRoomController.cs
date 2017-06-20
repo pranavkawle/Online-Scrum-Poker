@@ -60,7 +60,7 @@ namespace Osm.Server.Controllers
                 var member = _context.Members.Find(id);
 
                 var room = _context.Rooms.SingleOrDefault(r => r.RoomName.Equals(model.RoomName) &&
-                (string.IsNullOrWhiteSpace(model.Passphrase) ? true : r.Passphrase == model.Passphrase));
+                (string.IsNullOrWhiteSpace(r.Passphrase) ? true : r.Passphrase == model.Passphrase));
                 if (room != null)
                 {
                     model.Id = member.RoomId = room.Id;

@@ -14,17 +14,19 @@
     </div>
   </ng-template>
 
-  <nav class="navbar navbar-inverse fixed-top bg-primary navbar-toggleable-md" [hidden]="room.ownerId != memberId">
+  <nav class="navbar navbar-inverse fixed-top bg-primary navbar-toggleable-md">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarToggleForOwners"
       aria-controls="navbarToggleForOwners" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="javascript:void(0);">Online Scrum Poker</a>
-    <div class="collapse navbar-collapse" id="navbarToggleForOwners">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0"></ul>
-      <button type="button" class="btn btn-secondary" (click)="resetVotes()">Reset Votes</button>
-      &nbsp;
-      <button type="button" class="btn btn-secondary" (click)="revealVotes()">Reveal Votes</button>
+    <div class="collapse navbar-collapse align-items-right" id="navbarToggleForOwners">
+      <ul class="navbar-nav mr-auto"></ul>
+      <ul class="navbar-nav ">
+        <li><a class="nav-link" href="javascript:void(0);" (click)="resetVotes()" [hidden]="room.ownerId != memberId">Reset Votes</a></li>
+        <li><a class="nav-link" href="javascript:void(0);" (click)="revealVotes()" [hidden]="room.ownerId != memberId" [class.disabled]="!enableRevealButton">Reveal Votes</a></li>
+        <li><a class="nav-link" href="javascript:void(0);" (click)="logout()">Logout</a></li>
+      </ul>
     </div>
   </nav>
 </div>

@@ -64,13 +64,21 @@ namespace Osm.Server.Controllers
 
         // DELETE api/members/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             if (id > 0)
             {
-                _context.Members.Remove(_context.Members.Find(id));
-                _context.SaveChanges();
+                var member = _context.Members.Find(id);
+                if (member != null)
+                {
+                    _context.Members.Remove(member);
+                    _context.SaveChanges(); 
+                }
+
+                return true;
             }
+
+            return false;
         }
     }
 }

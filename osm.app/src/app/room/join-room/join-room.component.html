@@ -9,6 +9,9 @@
   <div class="form-group">
     <label for="passphrase">Passphrase</label>
     <input type="password" class="form-control" id="passphrase" formControlName="passphrase" placeholder="Passphrase">
+    <div *ngIf="invalidPassphrase" class="alert alert-danger">
+      {{ formErrors.password }}
+    </div>
   </div>
   <button type="submit" class="btn btn-primary">Join room</button>
   <a [routerLink]="['/create-room', memberId]" class="btn btn-primary float-sm-right">Create Room</a>

@@ -15,6 +15,7 @@ export class JoinRoomComponent implements OnInit {
   roomForm: FormGroup;
   room: Room;
   memberId: number;
+  invalidPassphrase: boolean;
 
   constructor(private router: Router, private route: ActivatedRoute, private service: RoomService, private formBuilder: FormBuilder) {
     this.room = new Room();
@@ -22,6 +23,7 @@ export class JoinRoomComponent implements OnInit {
     this.room.roomName = '';
     this.room.passphrase = '';
     this.room.isOpen = true;
+    this.invalidPassphrase = false;
   }
 
   ngOnInit() {
@@ -32,10 +34,16 @@ export class JoinRoomComponent implements OnInit {
   }
 
   joinRoom() {
+    this.invalidPassphrase = false;
     this.prepareRoom();
     this.service.joinRoom(this.memberId, this.room).subscribe((result: any) => {
-      this.room.id = result;
-      this.router.navigate(['/lobby', this.room.roomName, this.memberId]);
+      if(result > 0) {
+        this.room.id = result;
+        this.router.navigate(['/lobby', this.room.roomName, this.memberId]);
+      }
+      else {
+        this.invalidPassphrase = true;
+      }
     });
   }
 
@@ -49,5 +57,9 @@ export class JoinRoomComponent implements OnInit {
   private prepareRoom(): void {
     this.room.roomName = this.roomForm.controls.roomName.value;
     this.room.passphrase = this.roomForm.controls.passphrase.value;
+  }
+
+  formErrors = {
+    'password': 'Invalid passphrase!'
   }
 }
