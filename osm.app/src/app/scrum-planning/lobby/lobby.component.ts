@@ -36,6 +36,10 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.memberColors = [];
     this.alive = true;
     this.cardsLoaded = false;
+
+    this.room = new Room();
+    this.room.ownerId = 0;
+    this.room.isRevealed = false;
   }
 
   ngOnInit() {
@@ -94,6 +98,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   getCardValue(cardId: number) {
     if (this.cards && cardId > 0) {
+      if(this.room && !this.room.isRevealed) return '';
       return this.sanitizer.bypassSecurityTrustHtml(this.cards.find(c => c.id === cardId).value);
     }
     else
@@ -123,12 +128,15 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.room.isRevealed = false;
     this.service.updateRoom(this.room).subscribe((result: boolean) => {
       console.log('reset');
+      this.currentCardId = 0;
     });
   }
 
   revealVotes() {
     this.room.isRevealed = true;
-    this.service.updateRoom(this.room);
+    this.service.updateRoom(this.room).subscribe((result: boolean) => {
+      console.log('reveal');
+    });
   }
 
   private waitForCards() {

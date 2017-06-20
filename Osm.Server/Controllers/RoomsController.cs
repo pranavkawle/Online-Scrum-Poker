@@ -51,7 +51,7 @@ namespace Osm.Server.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]Room model)
+        public bool Put(int id, [FromBody]Room model)
         {
             if(id > 0 && model != null)
             {
@@ -66,7 +66,11 @@ namespace Osm.Server.Controllers
 
                 room.IsRevealed = model.IsRevealed;
                 _context.SaveChanges();
+
+                return true;
             }
+
+            return false;
         }
 
         // DELETE api/values/5

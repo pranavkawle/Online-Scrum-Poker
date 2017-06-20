@@ -47,6 +47,7 @@ export class VoteComponent implements OnInit, OnChanges {
   ngOnChanges() {
     if(this.cards != null && this.currentCardId > 0)
       this.cardValue = this.cards.find(c => c.id === this.currentCardId).value;
+    console.log(this.cardValue);
   }
 
   open(content) {
