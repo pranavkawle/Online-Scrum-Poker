@@ -106,7 +106,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   getCardValue(cardId: number) {
     if (this.cards && cardId > 0) {
-      if (this.room && !this.room.isRevealed) return '';
+      if (this.room && !this.room.isRevealed) 
+        return this.sanitizer.bypassSecurityTrustHtml('<svg version="1.1" width="96" height="96" viewBox="0 0 10 16" class="octicon octicon-verified" aria-hidden="true"><use xlink:href="#verified" /></svg>');
       return this.sanitizer.bypassSecurityTrustHtml(this.cards.find(c => c.id === cardId).value);
     }
     else
