@@ -20,8 +20,21 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <a class="navbar-brand" href="javascript:void(0);">Online Scrum Poker</a>
-    <div class="collapse navbar-collapse align-items-right" id="navbarToggleForOwners">
-      <ul class="navbar-nav mr-auto"></ul>
+    <div class="collapse navbar-collapse" id="navbarToggleForOwners">
+      <ul class="navbar-nav mr-auto">
+        <li>
+          <button tabindex="0" type="button" class="btn btn-lg btn-success"  popoverTitle="Share room details" placement="bottom"
+                  [innerHtml]="room.roomName" [ngbPopover]="sharePopover" [hidden]="room == null || room.roomName == null || room.roomName === ''"></button>
+          <ng-template #sharePopover>
+            <a [href]="sanitizer.bypassSecurityTrustUrl('whatsapp://send?text=Please join room: ' + room.roomName)" data-action="share/whatsapp/share">
+              <img src="/assets/WhatsApp_Logo.png" width="32px" height="32px" />
+            </a>
+            <a [href]="sanitizer.bypassSecurityTrustUrl('mailto:?subject=Online%20scrum%20poker%20room%3A%20' + room.roomName + '&amp;body=Please%20visit%20http%3A%2F%2Fonlinescrumpoker.azurewebsites.net%20to%20join%20room%20' + room.roomName)">
+              <img src="/assets/email.png" width="32px" height="32px" />
+            </a>
+          </ng-template>
+        </li>
+      </ul>
       <ul class="navbar-nav ">
         <li><a class="nav-link" href="javascript:void(0);" (click)="resetVotes()" [hidden]="room.ownerId != memberId">Reset Votes</a></li>
         <li><a class="nav-link" href="javascript:void(0);" (click)="revealVotes()" [hidden]="room.ownerId != memberId" [class.disabled]="!enableRevealButton">Reveal Votes</a></li>

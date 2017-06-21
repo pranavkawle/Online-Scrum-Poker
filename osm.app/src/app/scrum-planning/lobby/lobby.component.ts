@@ -27,13 +27,13 @@ export class LobbyComponent implements OnInit, OnDestroy {
   cards: Array<Card>;
   private alive: boolean; // used to unsubscribe from the IntervalObservable when OnDestroy is called.
   private cardsLoaded: boolean;
-  private enableRevealButton: boolean;
+  enableRevealButton: boolean;
   currentCardId: number;
 
   room: Room;
   memberColors: { [key: number]: string }[];
 
-  constructor(private router: Router, private route: ActivatedRoute, private service: ScrumPlanningService, private sanitizer: DomSanitizer) {
+  constructor(private router: Router, private route: ActivatedRoute, private service: ScrumPlanningService, public sanitizer: DomSanitizer) {
     this.memberColors = [];
     this.alive = true;
     this.cardsLoaded = false;
@@ -59,7 +59,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
         .subscribe(() => {
           this.service.refresh(this.roomName)
             .subscribe((result: Refresh) => {
-              console.log(result);
               if (!result) this.router.navigate(['/login']);
 
               let members = result.members;
@@ -87,7 +86,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
       this.service.getRoom(this.roomName).subscribe((result: Room) => {
         this.room = result;
-        console.log(this.room);
       });
 
       // get our data immediately when the component inits
@@ -151,13 +149,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
   logout() {
     if (Number(this.memberId) === Number(this.room.ownerId)) {
-      console.log(true);
       this.service.leaveRoom(this.room.id).subscribe((result: boolean) => {
         this.router.navigate(['/login']);
       });
     }
     else {
-      console.log(false);
       this.service.logout(this.memberId).subscribe((result: boolean) => {
         this.router.navigate(['/login']);
       });

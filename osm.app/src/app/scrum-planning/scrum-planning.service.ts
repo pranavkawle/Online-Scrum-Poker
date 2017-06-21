@@ -53,13 +53,13 @@ export class ScrumPlanningService {
 
   leaveRoom(roomId: number): Observable<boolean> {
     return this.http.delete(`${this.roomUrl}/${roomId}`)
-      .map(this.extractData)
+      .map((res: Response) => res.json)
       .catch(this.handleError);
   }
 
   logout(memberId: number): Observable<boolean> {
     return this.http.delete(`${this.memberUrl}/${memberId}`)
-      .map(this.extractData)
+      .map((res: Response) => res.json)
       .catch(this.handleError);
   }
 

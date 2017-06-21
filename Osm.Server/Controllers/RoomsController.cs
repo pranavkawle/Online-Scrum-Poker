@@ -84,8 +84,12 @@ namespace Osm.Server.Controllers
                 _context.Members.RemoveRange(members);
 
                 //Then remove room
-                _context.Rooms.Remove(_context.Rooms.Find(id));
-                _context.SaveChanges();
+                var room = _context.Rooms.Find(id);
+                if (room != null)
+                {
+                    _context.Rooms.Remove(room);
+                    _context.SaveChanges(); 
+                }
             }
         }
     }
